@@ -11,7 +11,6 @@ EGIT_REPO_URI="https://git.libcamera.org/libcamera/libcamera.git"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
 IUSE="doc gstreamer qcam test v4l2 uvcvideo ipu3"
 
 RESTRICT="!test? ( test )"

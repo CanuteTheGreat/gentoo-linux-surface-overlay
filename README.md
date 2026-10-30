@@ -15,8 +15,9 @@ Source of truth is `https://git.canutethegreat.com/CanuteTheGreat/gentoo-linux-s
 | `sys-apps/surface-dtx-daemon` | detach/attach handling for the Surface Book clipboard | Surface Book |
 | `sys-libs/hidrd` | HID report descriptor library (no longer needed by iptsd 3.x) | - |
 
-`dev-cpp/CLI11` and `media-libs/libcamera` are superseded by `dev-cpp/cli11` and
-`media-libs/libcamera` in `::gentoo` and are masked here (see `profiles/package.mask`).
+`dev-cpp/CLI11` (use `dev-cpp/cli11` from `::gentoo`) and `sys-libs/hidrd` (unused since iptsd 3, no longer builds)
+are masked (see `profiles/package.mask`). `media-libs/libcamera` is in `::gentoo` (0.7.0, higher than the stale
+0.0.4 here; the live ebuild has no KEYWORDS): use that one. All three are proposed for removal from this overlay.
 Each package keeps only its newest release plus an optional live `-9999`.
 
 The Surface Pro 1/2 (2013) need none of these: touch and pen are plain HID in the mainline kernel.
