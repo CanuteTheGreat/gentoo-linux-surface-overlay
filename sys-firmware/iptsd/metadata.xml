@@ -6,7 +6,6 @@
 		<name>Ronald Farrer</name>
 	</maintainer>
 	<use>
-		<flag name="systemd">Install the systemd unit and udev rule that start iptsd for each touch device</flag>
 		<flag name="tools">Install the debug tools (iptsd-calibrate, iptsd-dump, iptsd-perf)</flag>
 	</use>
 	<upstream>

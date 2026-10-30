@@ -1,0 +1,72 @@
+#!/sbin/openrc-run
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+# Multiplexed service, like net.*:
+#   iptsd          - manager: starts an instance for every IPTS touch device
+#                    present at start, and enables udev hotplug handling.
+#                    Add this one to a runlevel: rc-update add iptsd default
+#   iptsd.hidrawN  - one daemon for /dev/hidrawN (created/removed by udev via
+#                    /usr/libexec/iptsd-openrc, or by hand: ln -s iptsd /etc/init.d/iptsd.hidraw3)
+
+[ -r /etc/conf.d/iptsd ] && . /etc/conf.d/iptsd
+
+case ${RC_SVCNAME} in
+iptsd)
+	description="Intel Precise Touch & Stylus daemon (device manager)"
+
+	depend() {
+		need udev
+		use logger
+		after udev-trigger
+	}
+
+	start() {
+		local dev svc
+		ebegin "Starting iptsd instances for present IPTS devices"
+		for dev in /dev/hidraw*; do
+			[ -e "${dev}" ] || continue
+			/usr/bin/iptsd-check-device --quiet "${dev}" || continue
+			svc=iptsd.${dev##*/}
+			[ -e "/etc/init.d/${svc}" ] || ln -s iptsd "/etc/init.d/${svc}"
+			rc-service --nodeps "${svc}" start >/dev/null 2>&1 \
+				|| ewarn "${svc} failed to start"
+		done
+		eend 0
+	}
+
+	stop() {
+		local link
+		ebegin "Stopping iptsd instances"
+		for link in /etc/init.d/iptsd.*; do
+			[ -L "${link}" ] || continue
+			rc-service --nodeps "${link##*/}" stop >/dev/null 2>&1
+			rm -f "${link}"
+		done
+		eend 0
+	}
+	;;
+iptsd.*)
+	_dev=${RC_SVCNAME#iptsd.}
+	description="Intel Precise Touch & Stylus daemon for /dev/${_dev}"
+
+	supervisor=supervise-daemon
+	command=/usr/bin/iptsd
+	# runs as root, like the upstream systemd unit
+	command_args="${iptsd_args} /dev/${_dev}"
+	respawn_max=5
+	respawn_period=60
+
+	depend() {
+		need udev
+		use logger
+	}
+
+	start_pre() {
+		if [ ! -e "/dev/${_dev}" ]; then
+			eerror "/dev/${_dev} does not exist"
+			return 1
+		fi
+	}
+	;;
+esac

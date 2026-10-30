@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+description="Surface Detachment System (DTX) daemon"
+
+supervisor=supervise-daemon
+command=/usr/bin/surface-dtx-daemon
+# runs as root, like the upstream systemd unit
+command_args="${surface_dtx_daemon_args:---no-log-time}"
+output_log="${surface_dtx_daemon_log:-/var/log/surface-dtx-daemon.log}"
+error_log="${output_log}"
+respawn_max=5
+respawn_period=60
+
+depend() {
+	need dbus
+	after udev
+	use logger
+}
+
+start_pre() {
+	checkpath -f -m 0640 -o root:root "${output_log}" || return 1
+	if [ ! -e /dev/surface/dtx ]; then
+		eerror "/dev/surface/dtx is missing (no DTX device, or the surface_dtx kernel driver is not loaded)"
+		return 1
+	fi
+}

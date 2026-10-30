@@ -131,11 +131,35 @@ src_install() {
 	udev_dorules etc/udev/40-surface_dtx.rules
 	systemd_dounit etc/systemd/surface-dtx-daemon.service
 	systemd_douserunit etc/systemd/surface-dtx-userd.service
+
+	# OpenRC: system daemon
+	newinitd "${FILESDIR}/surface-dtx-daemon.initd" surface-dtx-daemon
+	newconfd "${FILESDIR}/surface-dtx-daemon.confd" surface-dtx-daemon
+
+	# OpenRC: user daemon, either as an OpenRC user service (>= 0.60) ...
+	exeinto /etc/user/init.d
+	newexe "${FILESDIR}/surface-dtx-userd.initd" surface-dtx-userd
+	# ... or as an XDG autostart entry (no-op under systemd)
+	exeinto /usr/libexec
+	doexe "${FILESDIR}/surface-dtx-userd-autostart"
+	insinto /etc/xdg/autostart
+	doins "${FILESDIR}/surface-dtx-userd.desktop"
+
 	dodoc README.md
 }
 
 pkg_postinst() {
 	udev_reload
+	if ! [[ -d /run/systemd/system ]]; then
+		elog "OpenRC: start the system daemon with"
+		elog "    rc-update add surface-dtx-daemon default"
+		elog "The per-user daemon surface-dtx-userd is started automatically by an"
+		elog "XDG autostart entry (/etc/xdg/autostart) in desktop sessions. Alternatively"
+		elog "use an OpenRC user service (OpenRC >= 0.60), as that user:"
+		elog "    rc-update --user add surface-dtx-userd default"
+		elog "(then disable the autostart entry, or the wrapper skips itself if an"
+		elog "instance is already running)."
+	fi
 }
 
 pkg_postrm() {

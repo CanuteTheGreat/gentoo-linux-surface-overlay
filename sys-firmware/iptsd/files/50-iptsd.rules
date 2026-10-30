@@ -1,0 +1,16 @@
+# iptsd: start one daemon instance per IPTS/ITHC touch device (hidraw).
+# Installed for both init systems; the matching half is picked at runtime
+# by testing whether systemd is PID 1 (/run/systemd/system exists).
+
+# --- systemd: iptsd@<escaped /dev/hidrawN>.service (same as upstream) ---
+SUBSYSTEM=="hidraw", ACTION=="add", TEST=="/run/systemd/system", TAG+="systemd", \
+	PROGRAM="/usr/bin/iptsd-check-device --quiet $env{DEVNAME}", \
+	PROGRAM="/usr/bin/systemd-escape --path $env{DEVNAME}", \
+	ENV{SYSTEMD_WANTS}+="iptsd@$result.service"
+
+# --- OpenRC: iptsd.<hidrawN> multi-instance service ---
+SUBSYSTEM=="hidraw", ACTION=="add", TEST!="/run/systemd/system", \
+	PROGRAM="/usr/bin/iptsd-check-device --quiet $env{DEVNAME}", \
+	RUN+="/usr/libexec/iptsd-openrc add $env{DEVNAME}"
+SUBSYSTEM=="hidraw", ACTION=="remove", TEST!="/run/systemd/system", \
+	RUN+="/usr/libexec/iptsd-openrc remove $env{DEVNAME}"

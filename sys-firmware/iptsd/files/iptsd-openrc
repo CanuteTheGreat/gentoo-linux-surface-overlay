@@ -1,0 +1,31 @@
+#!/bin/sh
+# Called from the iptsd udev rule on OpenRC systems.
+#   iptsd-openrc add|remove /dev/hidrawN
+# Maintains the per-device service symlink /etc/init.d/iptsd.hidrawN -> iptsd
+# and starts/stops it. udev must not block, so rc-service runs in the background.
+
+action=$1
+dev=${2##*/}
+[ -n "${dev}" ] || exit 1
+svc=iptsd.${dev}
+link=/etc/init.d/${svc}
+
+case ${action} in
+add)
+	# Hotplug only after the main "iptsd" service started; devices that
+	# already exist at that point are picked up by that service itself
+	# (avoids racing the boot-time udev coldplug against OpenRC).
+	rc-service -q iptsd status >/dev/null 2>&1 || exit 0
+	[ -e "${link}" ] || ln -s iptsd "${link}" || exit 1
+	rc-service "${svc}" start >/dev/null 2>&1 &
+	;;
+remove)
+	[ -L "${link}" ] || exit 0
+	( rc-service "${svc}" stop >/dev/null 2>&1; rm -f "${link}" ) &
+	;;
+*)
+	echo "usage: ${0##*/} add|remove /dev/hidrawN" >&2
+	exit 1
+	;;
+esac
+exit 0

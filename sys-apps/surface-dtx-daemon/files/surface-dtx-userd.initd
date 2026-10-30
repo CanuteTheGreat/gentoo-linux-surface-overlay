@@ -1,0 +1,33 @@
+#!/sbin/openrc-run
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+# OpenRC *user* service (OpenRC >= 0.60), installed to /etc/user/init.d.
+# Per user:  rc-update --user add surface-dtx-userd default
+#            rc-service --user surface-dtx-userd start
+# The daemon needs the session bus. OpenRC does not pass the login
+# environment to user services, so the bus address defaults to the standard
+# $XDG_RUNTIME_DIR/bus (override in ~/.config/rc/conf.d/surface-dtx-userd).
+
+description="Surface Detachment System (DTX) user daemon"
+
+supervisor=supervise-daemon
+command=/usr/bin/surface-dtx-userd
+command_args="${surface_dtx_userd_args:---no-log-time}"
+output_log="${surface_dtx_userd_log:-${XDG_STATE_HOME:-${HOME}/.local/state}/surface-dtx-userd.log}"
+error_log="${output_log}"
+export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=${XDG_RUNTIME_DIR}/bus}"
+respawn_max=5
+respawn_period=60
+
+depend() {
+	use dbus
+}
+
+start_pre() {
+	if [ "$(id -u)" = 0 ]; then
+		eerror "surface-dtx-userd must not run as root (upstream: ConditionUser=!root)"
+		return 1
+	fi
+	mkdir -p "${output_log%/*}" && checkpath -f -m 0600 "${output_log}"
+}

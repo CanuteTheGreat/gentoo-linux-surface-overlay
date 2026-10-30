@@ -1,0 +1,7 @@
+# /etc/conf.d/surface-dtx-daemon
+
+# Arguments for surface-dtx-daemon (config: /etc/dtx/surface-dtx-daemon.conf).
+#surface_dtx_daemon_args="--no-log-time"
+
+# Log file (stdout + stderr of the daemon).
+#surface_dtx_daemon_log="/var/log/surface-dtx-daemon.log"

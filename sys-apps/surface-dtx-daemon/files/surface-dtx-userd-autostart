@@ -1,0 +1,9 @@
+#!/bin/sh
+# XDG autostart wrapper for non-systemd sessions.
+# Under systemd the surface-dtx-userd.service user unit does this job, so do
+# nothing there (avoids a second instance). Never run as root.
+[ -d /run/systemd/system ] && exit 0
+[ "$(id -u)" = 0 ] && exit 0
+# already running for this user?
+pgrep -u "$(id -u)" -f '^/usr/bin/surface-dtx-userd' >/dev/null 2>&1 && exit 0
+exec /usr/bin/surface-dtx-userd --no-log-time

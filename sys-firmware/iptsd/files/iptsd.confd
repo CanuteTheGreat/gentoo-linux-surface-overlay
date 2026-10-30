@@ -1,0 +1,5 @@
+# /etc/conf.d/iptsd
+
+# Extra arguments passed to every iptsd instance (before the device path).
+# Daemon settings (config dir, presets) live in /etc/iptsd.conf.
+iptsd_args=""

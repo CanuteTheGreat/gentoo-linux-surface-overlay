@@ -27,11 +27,18 @@ The Surface Pro 1/2 (2013) need none of these: touch and pen are plain HID in th
     echo 'sys-firmware/iptsd ~amd64' >> /etc/portage/package.accept_keywords/surface   # all packages are ~amd64
     emerge -av sys-firmware/iptsd dev-libs/libwacom-surface sys-apps/surface-control
 
-- `iptsd` has a `systemd` USE flag: with it the per-device `iptsd@.service` and the udev rule are installed
-  (needs systemd as init). Without it (OpenRC) only the daemon, presets and `/etc/iptsd.conf` are installed;
-  start it yourself with `iptsd $(iptsd-find-hidraw)`.
-- `surface-dtx-daemon`: `systemctl enable --now surface-dtx-daemon` and
-  `systemctl --user enable --now surface-dtx-userd` on systemd; OpenRC users run the daemon from their own init script.
+- Services: iptsd and surface-dtx-daemon install a systemd unit AND an OpenRC init script, on any system
+  (no `systemd` USE flag).
+  - `iptsd`: one udev rule serves both. systemd: `iptsd@<device>.service` is started by udev (as upstream).
+    OpenRC: `rc-update add iptsd default`; the `iptsd` manager service starts an `iptsd.hidrawN` instance
+    for every touch device present and udev adds/removes instances on hotplug. Options: `/etc/conf.d/iptsd`.
+  - `surface-dtx-daemon`: systemd `systemctl enable --now surface-dtx-daemon`; OpenRC
+    `rc-update add surface-dtx-daemon default` (`/etc/conf.d/surface-dtx-daemon`).
+  - `surface-dtx-userd` (per user): systemd `systemctl --user enable --now surface-dtx-userd`; OpenRC either the
+    XDG autostart entry (`/etc/xdg/autostart`, automatic in desktop sessions, does nothing under systemd) or the
+    OpenRC user service (OpenRC >= 0.60): `rc-update --user add surface-dtx-userd default`. User services
+    need the session bus at `$XDG_RUNTIME_DIR/bus` (or set `DBUS_SESSION_BUS_ADDRESS` in
+    `~/.config/rc/conf.d/surface-dtx-userd`).
 - Kernel: the linux-surface patched kernel is needed for most newer devices (see the linux-surface wiki).
   Include the keyboard/touch modules in the initramfs if the keyboard does not work during boot.
 

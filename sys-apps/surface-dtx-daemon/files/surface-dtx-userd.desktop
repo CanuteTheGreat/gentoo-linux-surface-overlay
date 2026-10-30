@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Surface DTX user daemon
+Comment=Detach/attach notifications and clipboard handling for Surface Book
+Exec=/usr/libexec/surface-dtx-userd-autostart
+Terminal=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-HiddenUnderSystemd=true
+X-systemd-skip=true
