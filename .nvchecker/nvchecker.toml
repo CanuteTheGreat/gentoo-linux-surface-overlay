@@ -1,0 +1,32 @@
+# nvchecker sources for gentoo-linux-surface-overlay. Section name = category/package.
+# Packages proposed for removal (CLI11, libcamera, hidrd) are not monitored.
+
+["sys-firmware/iptsd"]
+source = "github"
+github = "linux-surface/iptsd"
+use_latest_release = true
+prefix = "v"
+
+["dev-libs/libwacom-surface"]
+source = "github"
+github = "linux-surface/libwacom-surface"
+use_max_tag = true
+include_regex = '^v\d+\.\d+\.\d+-\d+$'
+from_pattern = '^v(\d+\.\d+\.\d+)-\d+$'
+to_pattern = '\1'
+
+["sys-apps/surface-control"]
+source = "github"
+github = "linux-surface/surface-control"
+use_max_tag = true
+include_regex = '^v\d+\.\d+\.\d+-\d+$'
+from_pattern = '^v(\d+\.\d+\.\d+)-\d+$'
+to_pattern = '\1'
+
+["sys-apps/surface-dtx-daemon"]
+source = "github"
+github = "linux-surface/surface-dtx-daemon"
+use_max_tag = true
+include_regex = '^v\d+\.\d+\.\d+-\d+$'
+from_pattern = '^v(\d+\.\d+\.\d+)-\d+$'
+to_pattern = '\1'
