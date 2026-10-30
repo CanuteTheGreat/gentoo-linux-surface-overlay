@@ -1,14 +1,15 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "https://www.gentoo.org/dtd/repositories.dtd">
 <repositories version="1.0">
-  <repo quality="experimental" status="unofficial">
-    <name>gentoo-linux-surface-overlay</name>
-      <description lang="en">Gentoo ebuilds to assist installation and running of Gentoo Linux on Microsoft Surface device.</description>
-        <homepage>https://github.com/CanuteTheGreat/gentoo-linux-surface-overlay</homepage>
-        <owner type="person">
-            <name>Ronald Farrer</name>
-            <email>canutethegreat@gmail.com</email>
-        </owner>
-        <source type="git">git://github.com/CanuteTheGreat/gentoo-linux-surface-overlay.git</source>
-        <feed>https://github.com/CanuteTheGreat/gentoo-linux-surface-overlay/commits/master.atom</feed>
-  </repo>
+	<repo quality="experimental" status="unofficial">
+		<name>gentoo-linux-surface-overlay</name>
+		<description lang="en">Gentoo ebuilds for running Linux on Microsoft Surface devices (iptsd, libwacom-surface, surface-control, surface-dtx-daemon).</description>
+		<homepage>https://github.com/CanuteTheGreat/gentoo-linux-surface-overlay</homepage>
+		<owner type="person">
+			<email>canutethegreat@gmail.com</email>
+			<name>Ronald Farrer</name>
+		</owner>
+		<source type="git">https://github.com/CanuteTheGreat/gentoo-linux-surface-overlay.git</source>
+		<feed>https://github.com/CanuteTheGreat/gentoo-linux-surface-overlay/commits/main.atom</feed>
+	</repo>
 </repositories>
