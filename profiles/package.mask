@@ -1,0 +1,16 @@
+# Ronald Farrer <canutethegreat@gmail.com> (2026-10-29)
+# Superseded by ::gentoo (dev-cpp/cli11 2.7.2). Proposed for removal from
+# this overlay; masked so the overlay copy is never picked.
+dev-cpp/CLI11::gentoo-linux-surface-overlay
+
+# Ronald Farrer <canutethegreat@gmail.com> (2026-10-29)
+# Superseded by ::gentoo (media-libs/libcamera 0.7.0). The overlay ebuilds are
+# stale (Qt5, removed deps) and 9999 would otherwise win over ::gentoo.
+# Proposed for removal from this overlay.
+media-libs/libcamera::gentoo-linux-surface-overlay
+
+# Ronald Farrer <canutethegreat@gmail.com> (2026-10-29)
+# Not needed any more (iptsd 3.x dropped its hidrd dependency) and 0.2.0
+# no longer builds with GCC 15 (-Werror=unterminated-string-initialization).
+# Proposed for removal from this overlay.
+sys-libs/hidrd::gentoo-linux-surface-overlay
