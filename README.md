@@ -13,11 +13,9 @@ Source of truth is `https://git.canutethegreat.com/CanuteTheGreat/gentoo-linux-s
 | `dev-libs/libwacom-surface` | upstream libwacom + linux-surface device data; replaces `dev-libs/libwacom` | same devices with a pen |
 | `sys-apps/surface-control` | `surface` CLI (performance mode, DTX, ...) | Surface Aggregator devices (Pro 5+, Book 2+, Laptop) |
 | `sys-apps/surface-dtx-daemon` | detach/attach handling for the Surface Book clipboard | Surface Book |
-| `sys-libs/hidrd` | HID report descriptor library (no longer needed by iptsd 3.x) | - |
 
-`dev-cpp/CLI11` (use `dev-cpp/cli11` from `::gentoo`) and `sys-libs/hidrd` (unused since iptsd 3, no longer builds)
-are masked (see `profiles/package.mask`). `media-libs/libcamera` is in `::gentoo` (0.7.0, higher than the stale
-0.0.4 here; the live ebuild has no KEYWORDS): use that one. All three are proposed for removal from this overlay.
+Removed (replaced elsewhere): `dev-cpp/CLI11` (use `dev-cpp/cli11` from `::gentoo`), `media-libs/libcamera` (`::gentoo`
+has 0.7.0) and `sys-libs/hidrd` (unused since iptsd 3, no longer builds with GCC 15).
 Each package keeps only its newest release plus an optional live `-9999`.
 
 The Surface Pro 1/2 (2013) need none of these: touch and pen are plain HID in the mainline kernel.
@@ -39,6 +37,6 @@ The Surface Pro 1/2 (2013) need none of these: touch and pen are plain HID in th
 
 ## Maintenance
 
-A weekly Forgejo workflow (`.forgejo/workflows/update-check.yml`, nvchecker config in `.nvchecker/`) opens an
+A daily (06:17 UTC) Forgejo workflow (`.forgejo/workflows/update-check.yml`, nvchecker config in `.nvchecker/`) opens an
 issue when upstream publishes a new release. Ebuilds are checked with `pkgcheck scan` and test-built in a
 Gentoo stage3 container.

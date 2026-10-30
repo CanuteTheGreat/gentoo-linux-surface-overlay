@@ -1,4 +1,1 @@
 # packages (all errors) or package:Class that pkgcheck is not expected to pass; see README.md
-dev-cpp/CLI11          # superseded by ::gentoo dev-cpp/cli11, masked, proposed for removal
-media-libs/libcamera   # superseded by ::gentoo media-libs/libcamera, proposed for removal
-sys-libs/hidrd         # unused by iptsd 3, does not build with GCC 15, masked
