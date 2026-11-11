@@ -30,7 +30,10 @@ src_unpack() {
 		sed -i -E "s|^(sdtx(-tokio)?) = \{ git = \"[^\"]*libsurfacedtx\"[^}]*\}|\1 = { path = \"${WORKDIR}/libsurfacedtx/\1\" }|" "${f}" || die
 	done < <(find "${S}" -name Cargo.toml)
 
+	# newer cargo.eclass runs `cargo fetch` in the current dir (WORKDIR), not S
+	pushd "${S}" >/dev/null || die
 	cargo_live_src_unpack
+	popd >/dev/null || die
 }
 
 src_install() {
